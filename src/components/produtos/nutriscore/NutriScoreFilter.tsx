@@ -1,4 +1,5 @@
-import type { NutriScore } from '../models/Produto'
+import type { NutriScore } from "../../../models/Produto"
+
 
 type NutriScoreFilterProps = {
   activeScore: 'Todos' | NutriScore
