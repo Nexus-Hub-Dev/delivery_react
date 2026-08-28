@@ -23,7 +23,7 @@ function DeletarCategoria() {
 	// Função responsável por buscar uma categoria pelo ID no Backend (API)
 	async function buscarCategoriaPorId() {
 		try {
-			await buscar(`/categorias/${id}`, setCategoria)
+			await buscar(`/categoria/${id}`, setCategoria)
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				alert(`Erro ao buscar a categoria (${error.response?.status})`)
@@ -45,7 +45,7 @@ function DeletarCategoria() {
 
 		try{
 
-				await deletar(`/categorias/${id}`)
+				await deletar(`/categoria/${id}`)
 
 				alert('Categoria deletada com sucesso!')
 
@@ -65,28 +65,27 @@ function DeletarCategoria() {
 	}
 
 	return (
-		<div className="container w-1/3 mx-auto">
-			<h1 className="text-4xl text-center my-4">Deletar categoria</h1>
+		<div className="category-delete-page">
+			<h1>Deletar categoria</h1>
 
 			<p className="text-center font-semibold mb-4">
 				Você tem certeza de que deseja apagar a categoria a seguir?
 			</p>
 
-			<div className="border flex flex-col rounded-2xl overflow-hidden justify-between">
-				<header className="py-2 px-6 bg-indigo-600 text-white font-bold text-2xl">
+			<div className="category-delete-card">
+				<header className="category-card-header">
 					Categoria
 				</header>
 
-				<p className="p-8 text-3xl bg-slate-200 h-full">{categoria.tipo}</p>
+				<div className="category-delete-content"><strong>{categoria.tipo}</strong><p>{categoria.descricao}</p></div>
 
-				<div className="flex">
-					<button className="text-slate-100 bg-red-400 hover:bg-red-600 w-full py-2 cursor-pointer" onClick={retornar}>
+				<div className="category-delete-actions">
+					<button className="category-delete-no" onClick={retornar}>
 						Não
 					</button>
 
 					<button
-						className="w-full text-slate-100 bg-indigo-400
-                      hover:bg-indigo-600 flex items-center justify-center cursor-pointer"
+						className="category-delete-yes"
 						onClick={deletarCategoria}
 					>
 						{

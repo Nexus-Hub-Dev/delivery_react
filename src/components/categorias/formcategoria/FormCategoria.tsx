@@ -13,7 +13,7 @@ function FormCategoria() {
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 
 	// Estado responsável por armazenar os dados da categoria que será persistida no Backend (API)
-	const [categoria, setCategoria] = useState<Categoria>({} as Categoria)
+	const [categoria, setCategoria] = useState<Categoria>({ id: 0, tipo: "", descricao: "" })
 
 	// Acessar o parâmetro da rota (id da categoria)
 	const { id } = useParams<{ id: string }>()
@@ -21,7 +21,7 @@ function FormCategoria() {
 	// Função responsável por buscar uma categoria pelo ID no Backend (API)
 	async function buscarCategoriaPorId() {
 		try {
-			await buscar(`/categorias/${id}`, setCategoria)
+			await buscar(`/categoria/${id}`, setCategoria)
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				alert(`Erro ao buscar a categoria (${error.response?.status})`)
@@ -37,7 +37,7 @@ function FormCategoria() {
 	}, [id])
 
 	// Função responsável por atualizar o estado categoria
-	function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+	function atualizarEstado(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		setCategoria({
 			...categoria,
 			[e.target.name]: e.target.value,
@@ -54,7 +54,7 @@ function FormCategoria() {
 
 		if (id !== undefined) {
 			try {
-				await atualizar(`/categorias`, categoria, setCategoria)
+				await atualizar(`/categoria`, categoria, setCategoria)
 				alert("Categoria atualizada com sucesso!")
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
@@ -66,7 +66,8 @@ function FormCategoria() {
 			}
 		} else {
 			try {
-				await cadastrar(`/categorias`, categoria, setCategoria)
+				const novaCategoria = { tipo: categoria.tipo, descricao: categoria.descricao }
+				await cadastrar(`/categoria`, novaCategoria, setCategoria)
 				alert("Categoria cadastrada com sucesso!")
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
@@ -86,28 +87,15 @@ function FormCategoria() {
 	}
 
 	return (
-		<div className="container flex flex-col items-center justify-center mx-auto">
-			<h1 className="text-4xl text-center my-8">
-				{id === undefined ? "Cadastrar" : "Editar"} Categoria
-			</h1>
+		<div className="category-form-page">
+			<div className="category-form-heading"><span className="section-kicker">Organização do cardápio</span><h1>{id === undefined ? "Adicionar" : "Editar"} categoria</h1><p>Preencha os dados que serão exibidos no cardápio.</p></div>
 
-			<form className="w-1/2 flex flex-col gap-4" onSubmit={gerarNovaCategoria}>
-				<div className="flex flex-col gap-2">
-					<label htmlFor="tipo">Categoria</label>
-					<input
-						type="text"
-						placeholder="Digite o nome da categoria"
-						name="tipo"
-						className="border-2 border-slate-700 rounded p-2"
-						value={categoria.tipo}
-						onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
-					/>
+			<form className="category-form" onSubmit={gerarNovaCategoria}>
+				<div className="category-form-fields">
+					<label htmlFor="tipo">Tipo<input id="tipo" type="text" placeholder="Ex.: Pizza" name="tipo" value={categoria.tipo} onChange={atualizarEstado} required /></label>
+					<label htmlFor="descricao">Descrição<textarea id="descricao" placeholder="Descreva esta categoria" name="descricao" value={categoria.descricao} onChange={atualizarEstado} rows={4} required /></label>
 				</div>
-				<button
-					className="rounded text-slate-100 bg-indigo-400 
-                    hover:bg-indigo-800 w-1/2 py-2 mx-auto flex justify-center cursor-pointer"
-					type="submit"
-				>
+				<button className="category-form-submit" type="submit">
 					{isLoading ? (
 						<ClipLoader color="#ffffff" size={24} />
 					) : (

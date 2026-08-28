@@ -7,22 +7,15 @@ import { SyncLoader } from "react-spinners"
 
 function ListaCategorias() {
 	// Estado responsável por controlar o loader (animação de carregamento)
-	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [isLoading, setIsLoading] = useState<boolean>(true)
 
 	// Estado responsável por armazenar todas as categorias persistidas no Backend (API)
 	const [categorias, setCategorias] = useState<Categoria[]>([])
 
-	// useEffect responsável por executar a função buscarCategorias
-	useEffect(() => {
-		buscarCategorias()
-	}, [])
-
 	// Função responsável por buscar todas as categorias no Backend (API)
 	async function buscarCategorias() {
-		setIsLoading(true)
-
 		try {
-			await buscar(`/categorias`, setCategorias)
+			await buscar(`/categoria`, setCategorias)
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				alert(`Erro ao buscar as categorias (${error.response?.status})`)
@@ -31,6 +24,11 @@ function ListaCategorias() {
 			setIsLoading(false)
 		}
 	}
+
+	// useEffect responsável por executar a função buscarCategorias
+	useEffect(() => {
+		queueMicrotask(() => void buscarCategorias())
+	}, [])
 
 	return (
 		<>
