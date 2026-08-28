@@ -19,12 +19,9 @@ type PropriedadesCardProduto = {
   favorito: boolean
   aoAlternarFavorito: (id: number) => void
   formatarPreco: (preco: number) => string
-  quantidade: number
-  aoAdicionar: (id: number) => void
-  aoRemover: (id: number) => void
 }
 
-function CardProduto({ produto, favorito, aoAlternarFavorito, formatarPreco, quantidade, aoAdicionar, aoRemover }: PropriedadesCardProduto) {
+function CardProduto({ produto, favorito, aoAlternarFavorito, formatarPreco }: PropriedadesCardProduto) {
   return (
     <article className="product-card">
       <div className={`product-image product-${produto.id}`}>
@@ -39,7 +36,7 @@ function CardProduto({ produto, favorito, aoAlternarFavorito, formatarPreco, qua
         <div className="product-meta"><span><Star size={14} weight="fill" /> {produto.rating}</span><span><Clock size={14} /> {produto.time}</span></div>
         <h3>{produto.name}</h3>
         <p>{produto.description}</p>
-        <div className="product-footer"><strong>{formatarPreco(produto.price)}</strong><div className="quantity-controls"><span className="quantity-label">Quantidade: <b>{quantidade}</b></span><div className="quantity-actions"><button type="button" onClick={() => aoAdicionar(produto.id)}>Adicionar</button><button type="button" onClick={() => aoRemover(produto.id)}>Remover</button></div></div></div>
+        <div className="product-footer"><strong>{formatarPreco(produto.price)}</strong></div>
       </div>
     </article>
   )

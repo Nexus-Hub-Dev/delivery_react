@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface NavItem {
   label: string;
@@ -7,10 +7,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Home', path: '/' },
-  { label: 'Sobre', path: '/sobre' },
-  { label: 'Categorias', path: '/categorias' },
-  { label: 'Carrinho', path: '/carrinho' },
+  { label: "Produto", path: "/" },
+  { label: "Sobre", path: "/sobre" },
+  { label: "Categorias", path: "/categorias" },
+  { label: "Carrinho", path: "/carrinho" },
 ];
 
 export const Navbar: React.FC = () => {
@@ -19,28 +19,22 @@ export const Navbar: React.FC = () => {
   return (
     <header className="site-navbar">
       <nav className="site-navbar-inner">
-
         {/* LOGO */}
         <Link to="/" className="site-logo">
-          <span>NEXUS</span><strong>DELIVERY</strong>
+          <span>NEXUS</span>
+          <strong>DELIVERY</strong>
         </Link>
 
         {/* MENU DESKTOP */}
         <ul className="site-nav-links">
           {navItems.map((item) => (
             <li key={item.label}>
-              {item.path.startsWith('#') ? (
-                <a
-                  href={item.path}
-                    className="site-nav-link"
-                >
+              {item.path.startsWith("#") ? (
+                <a href={item.path} className="site-nav-link">
                   {item.label}
                 </a>
               ) : (
-                <Link
-                  to={item.path}
-                    className="site-nav-link"
-                >
+                <Link to={item.path} className="site-nav-link">
                   {item.label}
                 </Link>
               )}
@@ -50,10 +44,7 @@ export const Navbar: React.FC = () => {
 
         {/* BOTÃO CTA */}
         <div className="site-nav-cta">
-          <a
-            href="#contato"
-            className="site-nav-button"
-          >
+          <a href="#contato" className="site-nav-button">
             Entrar
           </a>
         </div>
@@ -65,11 +56,26 @@ export const Navbar: React.FC = () => {
           className="site-menu-button"
           aria-label="Abrir Menu"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             {isOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             )}
           </svg>
         </button>
@@ -81,7 +87,7 @@ export const Navbar: React.FC = () => {
           <ul>
             {navItems.map((item) => (
               <li key={item.label}>
-                {item.path.startsWith('#') ? (
+                {item.path.startsWith("#") ? (
                   <a
                     href={item.path}
                     onClick={() => setIsOpen(false)}

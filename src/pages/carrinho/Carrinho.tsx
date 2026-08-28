@@ -1,5 +1,9 @@
 function Carrinho() {
-  return <main><h1>Carrinho</h1></main>
+  return (
+    <main>
+      <h1>Carrinho</h1>
+    </main>
+  );
 }
 
-export default Carrinho
+export default Carrinho;
