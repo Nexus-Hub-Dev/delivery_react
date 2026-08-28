@@ -16,28 +16,37 @@ export type NovoProduto = {
 type FormProdutoProps = {
   aoAdicionarProduto: (produto: NovoProduto) => Promise<void>;
   aoFechar: () => void;
+  produtoInicial?: Pick<NovoProduto, "name" | "description" | "price" | "category" | "nutriScore"> & { id: number };
+  modoEdicao?: boolean;
 };
 
-function FormProduto({ aoAdicionarProduto, aoFechar }: FormProdutoProps) {
+function FormProduto({ aoAdicionarProduto, aoFechar, produtoInicial, modoEdicao = false }: FormProdutoProps) {
   const [produto, setProduto] = useState({
-    name: "",
-    description: "",
-    price: "",
+    name: produtoInicial?.name || "",
+    description: produtoInicial?.description || "",
+    price: produtoInicial ? String(produtoInicial.price) : "",
     categoriaId: "",
     nutriScore: "C" as NutriScore,
   });
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const categoriaInicial = produtoInicial?.category;
 
   useEffect(() => {
     queueMicrotask(
       () =>
-        void buscar("/categoria", setCategorias).catch((error: unknown) => {
+        void buscar<Categoria[]>("/categoria", (data) => {
+          setCategorias(data);
+          if (categoriaInicial) {
+            const categoria = data.find((item) => item.tipo === categoriaInicial);
+            if (categoria) atualizarCampo("categoriaId", String(categoria.id));
+          }
+        }).catch((error: unknown) => {
           if (axios.isAxiosError(error))
             alert(`Erro ao buscar categorias (${error.response?.status})`);
         }),
     );
-  }, []);
+  }, [categoriaInicial]);
 
   function atualizarCampo(campo: string, valor: string) {
     setProduto((atual) => ({ ...atual, [campo]: valor }));
@@ -94,7 +103,7 @@ function FormProduto({ aoAdicionarProduto, aoFechar }: FormProdutoProps) {
         <div className="seller-form-heading">
           <div>
             <span className="section-kicker">Área do vendedor</span>
-            <h2>Adicionar produto</h2>
+            <h2>{modoEdicao ? "Editar produto" : "Adicionar produto"}</h2>
           </div>
           <button
             className="modal-close"
@@ -178,7 +187,7 @@ function FormProduto({ aoAdicionarProduto, aoFechar }: FormProdutoProps) {
             disabled={isSubmitting || categorias.length === 0}
             type="submit"
           >
-            {isSubmitting ? "Salvando..." : "Adicionar produto"}
+            {isSubmitting ? "Salvando..." : modoEdicao ? "Salvar alterações" : "Adicionar produto"}
           </button>
         </div>
       </form>

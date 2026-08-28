@@ -3,7 +3,7 @@ import CardCategoria from "../cardcategorias/CardCategoria";
 import type Categoria from "../../../models/Categoria";
 import { buscar } from "../../../services/Service";
 import axios from "axios";
-import { SyncLoader } from "react-spinners";
+import { CircleNotch } from "@phosphor-icons/react";
 
 function ListaCategorias() {
   // Estado responsável por controlar o loader (animação de carregamento)
@@ -33,8 +33,8 @@ function ListaCategorias() {
   return (
     <>
       {isLoading && (
-        <div className="flex justify-center w-full my-8">
-          <SyncLoader color="#312e81" size={32} />
+        <div className="category-loading" role="status" aria-label="Carregando categorias">
+          <CircleNotch className="category-loading-icon" size={34} weight="bold" />
         </div>
       )}
 

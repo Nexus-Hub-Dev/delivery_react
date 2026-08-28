@@ -18,6 +18,8 @@ import { NutriScoreFilter } from "../../components/produtos/nutriscore/NutriScor
 import {
   buscar,
   criarProduto,
+  atualizarProduto,
+  deletarProduto,
   listarProdutos,
   listarProdutosPorNutriScore,
 } from "../../services/Service";
@@ -154,10 +156,10 @@ function Catalogo() {
   >("Todos");
   const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState<number[]>([]);
-  const [quantities, setQuantities] = useState<Record<number, number>>({});
   const [catalogProducts, setCatalogProducts] = useState(products);
   const [apiUnavailable, setApiUnavailable] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [categories, setCategories] = useState(fallbackCategories);
 
   useEffect(() => {
@@ -237,13 +239,25 @@ function Catalogo() {
       apiProductToProduct(savedProduct),
     ]);
   };
-  const addQuantity = (id: number) =>
-    setQuantities((current) => ({ ...current, [id]: (current[id] || 0) + 1 }));
-  const removeQuantity = (id: number) =>
-    setQuantities((current) => ({
-      ...current,
-      [id]: Math.max((current[id] || 0) - 1, 0),
-    }));
+  const editProduct = async (updatedProduct: NovoProduto) => {
+    if (!editingProduct) return;
+    const savedProduct = await atualizarProduto(editingProduct.id, {
+      nome: updatedProduct.name,
+      descricao: updatedProduct.description,
+      preco: updatedProduct.price,
+      nutriScore: updatedProduct.nutriScore,
+      categoria: updatedProduct.categoria,
+    });
+    setCatalogProducts((current) => current.map((product) =>
+      product.id === editingProduct.id ? apiProductToProduct(savedProduct) : product,
+    ));
+  };
+  const removeProduct = async (id: number) => {
+    const product = catalogProducts.find((item) => item.id === id);
+    if (!product || !window.confirm(`Remover o produto "${product.name}"?`)) return;
+    await deletarProduto(id);
+    setCatalogProducts((current) => current.filter((item) => item.id !== id));
+  };
 
   return (
     <div className="app-shell">
@@ -375,9 +389,11 @@ function Catalogo() {
                     )
                   }
                   formatarPreco={formatPrice}
-                  quantidade={quantities[product.id] || 0}
-                  aoAdicionar={addQuantity}
-                  aoRemover={removeQuantity}
+                  aoEditar={(product) => {
+                    setEditingProduct(product);
+                    setIsProductModalOpen(true);
+                  }}
+                  aoRemoverProduto={(id) => void removeProduct(id)}
                 />
               ))}
             </div>
@@ -388,8 +404,13 @@ function Catalogo() {
             )}
             {isProductModalOpen && (
               <FormProduto
-                aoAdicionarProduto={addProduct}
-                aoFechar={() => setIsProductModalOpen(false)}
+                aoAdicionarProduto={editingProduct ? editProduct : addProduct}
+                produtoInicial={editingProduct || undefined}
+                modoEdicao={Boolean(editingProduct)}
+                aoFechar={() => {
+                  setIsProductModalOpen(false);
+                  setEditingProduct(null);
+                }}
               />
             )}
           </div>

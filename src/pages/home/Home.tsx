@@ -53,6 +53,9 @@ const equipe = [
 const logo =
   "https://ik.imagekit.io/beakrg2dk/PI1%20-%20CRM/Gemini_Generated_Image_obmllvobmllvobml.png";
 
+const criarFallbackFoto = (nome: string) =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 112"><rect width="112" height="112" fill="#EDE4FF"/><text x="56" y="70" fill="#7548B8" font-family="Arial,sans-serif" font-size="48" font-weight="700" text-anchor="middle">${nome.charAt(0)}</text></svg>`)}`;
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#FAF8FF] text-[#29213D]">
@@ -266,6 +269,12 @@ export default function Home() {
                     src={pessoa.foto}
                     alt={`Foto de ${pessoa.nome}`}
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = criarFallbackFoto(pessoa.nome);
+                    }}
                   />
                 </div>
 

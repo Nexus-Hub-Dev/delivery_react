@@ -57,3 +57,15 @@ export async function criarProduto(produto: object): Promise<Produto> {
   const response = await api.post<Produto>("/produtos", produto);
   return response.data;
 }
+
+export async function atualizarProduto(
+  id: number,
+  produto: object,
+): Promise<Produto> {
+  const response = await api.put<Produto>(`/produtos/${id}`, produto);
+  return response.data;
+}
+
+export async function deletarProduto(id: number): Promise<void> {
+  await api.delete(`/produtos/${id}`);
+}

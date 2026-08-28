@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { ShoppingCart } from "@phosphor-icons/react";
 
 interface NavItem {
   label: string;
@@ -16,40 +17,39 @@ const navItems: NavItem[] = [
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const renderNavItem = (item: NavItem, closeMenu = false) => (
+    <li key={item.label}>
+      <Link
+        to={item.path}
+        onClick={closeMenu ? () => setIsOpen(false) : undefined}
+        className="site-nav-link"
+        aria-label={item.label}
+        title={item.label}
+      >
+        {item.path === "/carrinho" ? (
+          <ShoppingCart size={21} aria-hidden="true" />
+        ) : (
+          item.label
+        )}
+      </Link>
+    </li>
+  );
+
   return (
     <header className="site-navbar">
       <nav className="site-navbar-inner">
-        {/* LOGO */}
         <Link to="/" className="site-logo">
           <span>NEXUS</span>
           <strong>DELIVERY</strong>
         </Link>
-
-        {/* MENU DESKTOP */}
         <ul className="site-nav-links">
-          {navItems.map((item) => (
-            <li key={item.label}>
-              {item.path.startsWith("#") ? (
-                <a href={item.path} className="site-nav-link">
-                  {item.label}
-                </a>
-              ) : (
-                <Link to={item.path} className="site-nav-link">
-                  {item.label}
-                </Link>
-              )}
-            </li>
-          ))}
+          {navItems.map((item) => renderNavItem(item))}
         </ul>
-
-        {/* BOTÃO CTA */}
         <div className="site-nav-cta">
-          <a href="#contato" className="site-nav-button">
+          <Link to="/login" className="site-nav-button">
             Entrar
-          </a>
+          </Link>
         </div>
-
-        {/* BOTÃO MOBILE */}
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -80,32 +80,10 @@ export const Navbar: React.FC = () => {
           </svg>
         </button>
       </nav>
-
-      {/* MENU MOBILE EXPANSÍVEL */}
       {isOpen && (
         <div className="site-mobile-menu">
           <ul>
-            {navItems.map((item) => (
-              <li key={item.label}>
-                {item.path.startsWith("#") ? (
-                  <a
-                    href={item.path}
-                    onClick={() => setIsOpen(false)}
-                    className="site-nav-link"
-                  >
-                    {item.label}
-                  </a>
-                ) : (
-                  <Link
-                    to={item.path}
-                    onClick={() => setIsOpen(false)}
-                    className="site-nav-link"
-                  >
-                    {item.label}
-                  </Link>
-                )}
-              </li>
-            ))}
+            {navItems.map((item) => renderNavItem(item, true))}
             <li>
               <a
                 href="#contato"

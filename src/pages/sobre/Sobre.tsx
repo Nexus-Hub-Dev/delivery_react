@@ -1,12 +1,15 @@
 const equipe = [
-  "Paula",
-  "Nayara",
-  "Thais",
-  "Higor",
-  "Edson",
-  "João",
-  "Guilherme",
+  ["Paula", "https://ik.imagekit.io/beakrg2dk/PI1%20-%20CRM/Paula_Leao.png"],
+  ["Nayara", "https://ik.imagekit.io/beakrg2dk/PI1%20-%20CRM/nayara_bastos.png"],
+  ["Thais", "https://ik.imagekit.io/beakrg2dk/PI1%20-%20CRM/thais_santana.jpg"],
+  ["Higor", "https://ik.imagekit.io/beakrg2dk/PI1%20-%20CRM/higor_damasceno.png"],
+  ["Edson", "https://ik.imagekit.io/beakrg2dk/PI1%20-%20CRM/edson_nascimento.jpg"],
+  ["João", "https://ik.imagekit.io/beakrg2dk/PI1%20-%20CRM/joao_ribeiro.jpg"],
+  ["Guilherme", "https://ik.imagekit.io/beakrg2dk/PI1%20-%20CRM/guilherme_sandoli.png"],
 ];
+
+const criarFallbackFoto = (nome: string) =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 112"><rect width="112" height="112" fill="#EDE4FF"/><text x="56" y="70" fill="#7548B8" font-family="Arial,sans-serif" font-size="48" font-weight="700" text-anchor="middle">${nome.charAt(0)}</text></svg>`)}`;
 
 function Sobre() {
   return (
@@ -49,8 +52,19 @@ function Sobre() {
         <span className="section-kicker">Quem faz acontecer</span>
         <h2>Conheça nossa equipe</h2>
         <div className="team-grid">
-          {equipe.map((nome, index) => (
+          {equipe.map(([nome, foto], index) => (
             <article key={nome}>
+              <img
+                className="team-photo"
+                src={foto}
+                alt={`Foto de ${nome}`}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                onError={(event) => {
+                  event.currentTarget.onerror = null;
+                  event.currentTarget.src = criarFallbackFoto(nome);
+                }}
+              />
               <span>{String(index + 1).padStart(2, "0")}</span>
               <h3>{nome}</h3>
               <p>Desenvolvimento e evolução do NexusDelivery.</p>

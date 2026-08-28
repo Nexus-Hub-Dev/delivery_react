@@ -7,6 +7,7 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import FormCategoria from "./components/categorias/formcategoria/FormCategoria";
 import DeletarCategoria from "./components/categorias/deletarcategorias/DeletarCategoria";
+import Login from "./pages/login/Login";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               element={<DeletarCategoria />}
             />
             <Route path="/carrinho" element={<Carrinho />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
         <Footer />
