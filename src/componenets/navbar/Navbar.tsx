@@ -10,7 +10,7 @@ const navItems: NavItem[] = [
   { label: 'Home', path: '/' },
   { label: 'Sobre', path: '/#equipe' },
   { label: 'Categorias', path: '/categorias' },
-  { label: 'Carrinho', path: '/carrinho' },
+  { label: 'Produtos', path: '/produtos' },
 ];
 
 export const Navbar: React.FC = () => {
